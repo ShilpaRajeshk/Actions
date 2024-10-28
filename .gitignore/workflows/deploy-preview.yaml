@@ -1,1 +1,27 @@
+name: Vercel Deployment
 
+env:
+    VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+    VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+     Deploy-Prevew:
+         runs-on: ubuntu_latest
+         steps:
+
+            - users: actions/checkout@v3
+
+            - name: Vercel Install
+              run: npm install --global vercel
+
+            - name: Pull Vercel Environment Information
+              run: vercel pull --yes --envronment=preview --token=${{ secrets.VERCEL_TOKEN }}
+
+            - name: Bild Project Artifacts
+              run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
+            - name: Deploy to Vercel
+              run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
